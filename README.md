@@ -158,6 +158,23 @@ http://<EC2-PUBLIC-IP>:8080
 ```
 You should now be able to access the application successfully.
 
+### How Terraform Authenticates with AWS
+  - You create AWS access keys (Access Key + Secret Key).
+  - You configure these keys using the AWS CLI.
+  - AWS CLI stores the credentials locally.
+  - Terraform reads these credentials and uses them to make AWS API calls.
+
+### Configure AWS CLI
+- Run the following command:
+```bash
+aws configure
+```
+You will be prompted to enter:
+  - AWS Access Key ID
+  - AWS Secret Access Key
+  - Default region (e.g., us-east-1)
+  - Default output format (press Enter to keep default)
+
 ### Terraform Backend Setup (S3 + DynamoDB)
 This guide explains how to create a Terraform backend using AWS S3 for state storage and DynamoDB for state locking in the backend folder.
 
