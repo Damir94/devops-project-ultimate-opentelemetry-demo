@@ -94,3 +94,67 @@ Verify Terraform installation:
 terraform --version
 ```
 <img width="525" height="96" alt="Screenshot 2026-01-13 at 11 40 58 AM" src="https://github.com/user-attachments/assets/d678be0b-77b6-4f15-b640-a12dab3d5840" />
+
+### Run the Project Locally
+Clone the project repository and start the application using Docker Compose.
+```bash
+git clone https://github.com/iam-veeramalla/ultimate-devops-project-demo.git
+cd ultimate-devops-project-demo
+ls
+docker compose up
+```
+Check disk usage (useful before and after resizing volumes):
+```bash
+df -h
+```
+### Resize an AWS EBS Volume (Ubuntu EC2)
+This section explains how to resize an EBS root volume and extend the filesystem on an EC2 instance.
+
+Step 1: Modify the Volume in AWS Console
+  - Open EC2 → Volumes
+  - Select the volume attached to your instance
+  - Click Actions → Modify volume
+  - Change the size to 30 GB and click Modify
+
+Step 2: Verify the New Volume Size
+```bash
+lsblk
+```
+You will notice:
+  - /dev/xvda → resized to 30 GB
+  - /dev/xvda1 → still showing the old size (e.g., 7 GB)
+
+Step 3: Install Cloud Guest Utilities
+```bash
+sudo apt install -y cloud-guest-utils
+```
+Step 4: Extend the Partition
+```bash
+sudo growpart /dev/xvda 1
+lsblk
+df -h
+```
+Step 5: Resize the Filesystem
+```bash
+sudo resize2fs /dev/xvda1
+df -h
+```
+At this point, the root filesystem should reflect the new 30 GB size.
+
+Step 6: Restart the Application
+```bash
+docker compose up -d
+```
+### AWS Security Groups and Application Access
+To access the application running on the EC2 instance:
+  - Open the Security Group attached to the EC2 instance
+  - Go to Inbound rules → Edit inbound rules
+  - Allow All Traffic (for demo/testing purposes only)
+  - Save the rules
+
+### Access the Application
+```bash
+http://<EC2-PUBLIC-IP>:8080
+```
+You should now be able to access the application successfully.
+
