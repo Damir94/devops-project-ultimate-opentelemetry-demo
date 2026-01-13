@@ -158,3 +158,28 @@ http://<EC2-PUBLIC-IP>:8080
 ```
 You should now be able to access the application successfully.
 
+### Terraform Backend Setup (S3 + DynamoDB)
+This guide explains how to create a Terraform backend using AWS S3 for state storage and DynamoDB for state locking.
+
+Sample Terraform Code (main.tf)
+```hcl
+provider "aws" {
+  region = "us-west-2"
+}
+resource "aws_s3_bucket" "terraform_state_bucket" {
+  bucket = "terraform-demo-x-state-s3-bucket"
+
+  lifecycle {
+    prevent_destroy = false
+  }
+}
+resource "aws_dynamodb_table" "terraform_state_lock" {
+  name         = "terraform-ecs-state"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "lock_id"
+  attribute {
+    name = "lock_id"
+    type = "S"
+  }
+}
+```
