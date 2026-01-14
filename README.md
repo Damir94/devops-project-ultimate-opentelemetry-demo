@@ -484,7 +484,7 @@ output "cluster_name" {
 ### One-Line Summary
 This Terraform code creates a complete EKS cluster by setting up IAM roles, attaching required policies, creating the control plane, and launching worker nodes with proper networking and permissions.
 
-In this lecture we will learn how to create VPC and ECS using the modules that we wrote in the previous lecture. Because we already wrote the modules.
+In this lecture we will learn how to create VPC and EKS using the modules that we wrote in the previous lecture. Because we already wrote the modules.
 
 ### main.tf
 ```hcl
