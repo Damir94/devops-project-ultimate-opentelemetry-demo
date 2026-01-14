@@ -339,7 +339,7 @@ output "public_subnet_ids" {
 ```
 
 ### EKS Module Using Terraform
-In this module, we create an ECS (EKS-style Kubernetes) cluster using Terraform.
+In this module, we create an EKS (EKS-style Kubernetes) cluster using Terraform.
 
 ### main.tf
 ```hcl
