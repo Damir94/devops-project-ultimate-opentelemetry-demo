@@ -653,3 +653,55 @@ kubectl get all
 ```bash
 cd ultimate-devops-project/kubernetes
 ```
+
+### Step 1: Create the Service Account
+All microservices in this project use a custom service account instead of the default one
+Apply Service Account
+```bash
+kubectl apply -f service-account.yaml
+```
+Verify
+```bash
+kubectl get sa
+```
+You should see: opentelemetry-demo
+### Step 2: Deploy All Microservices
+  -  Option 1: Apply Individual Manifests
+     You can apply manifests folder by folder, but this is time-consuming.
+  - Option 2: Apply Combined Deployment (Recommended)
+     A single merged YAML file is provided that contains:
+       - All services
+       - All deployments
+       - ~20 microservices combined
+```bash
+kubectl apply -f complete-deploy.yaml
+```
+This file:
+  - Creates services first
+  - Then creates deployments
+### Step 3: Verify Deployment and Services Status
+```bash
+kubectl get pods
+kubectl get svc
+```
+
+## Accessing the Application
+### Why the App Is Not Accessible Yet
+If you check the frontend service:
+```bash
+kubectl get svc | grep frontend
+```
+You will see: Private IPs (e.g., 172.x.x.x)
+These IPs are only accessible inside the VPC
+
+That means:
+  - You cannot access the application from your browser yet
+  - The EKS cluster runs inside a private VPC network
+### Summary
+  - Always verify cluster context before deployment
+  - Ensure namespace is clean
+  - Create the service account first
+  - Deploy all services and deployments
+  - Wait for all pods to be running
+  - Microservices communicate via service names
+  - Application is not publicly accessible yet (by design)
