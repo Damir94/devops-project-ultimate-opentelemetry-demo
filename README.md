@@ -621,3 +621,35 @@ terraform init
 terraform plan
 terraform apply
 ```
+### Connecting kubectl to an Amazon EKS Cluster
+By default, kubectl does not know which Kubernetes cluster to connect to.
+To communicate with a cluster (like EKS), kubectl relies on a configuration file called kubeconfig.
+
+### Update kubeconfig with EKS Cluster Info
+Run the following command:
+```bash
+ aws eks update-kubeconfig --name <EKS_CLUSTER_NAME> --region <AWS_REGION>
+```
+### Verify the Connection
+Check cluster details: 
+```bash
+kubectl config view
+kubectl config current-context
+kubectl get nodes
+```
+If nodes are listed, kubectl is successfully connected to your EKS cluster.
+
+### Deploying the Project to an EKS Cluster
+This guide explains how to deploy the project’s microservices to an EKS (Kubernetes) cluster, verify the deployment, and understand how services communicate with each other.
+1. Verify Cluster Context
+```bash
+kubectl config current-context
+```
+2. Verify a Clean Namespace
+```bash
+kubectl get all
+```
+3. Navigate to the Kubernetes manifests directory:
+```bash
+cd ultimate-devops-project/kubernetes
+```
