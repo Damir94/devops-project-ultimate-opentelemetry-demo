@@ -705,3 +705,23 @@ That means:
   - Wait for all pods to be running
   - Microservices communicate via service names
   - Application is not publicly accessible yet (by design)
+
+### Exposing the Application Using LoadBalancer Service
+By default, Kubernetes services are created as ClusterIP, which means they are accessible only inside the cluster.
+To access the application from the internet, we must expose the frontend using a LoadBalancer service.
+
+### Step 1: Identify the Frontend Service. First, find the frontend proxy service:
+```bash
+kubectl get svc | grep frontend-proxy
+```
+### Step 2: Edit the Service Type
+```bash
+kubectl edit svc frontend-proxy
+```
+At the bottom of the file, change: type: ClusterIP to type: LoadBalancer
+
+### Step 3: Verify the Load Balancer Check the service status: kubectl get svc
+```bash
+kubectl get svc
+```
+Copy the EXTERNAL-IP / FQDN and access it in the browser: 
