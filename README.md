@@ -285,7 +285,7 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 ```
-###Big Picture (One-Line Summary)
+### Big Picture (One-Line Summary)
   - VPC → Network
   - Public Subnets → Internet-facing resource
   - Private Subnets → EKS tasks / backend
