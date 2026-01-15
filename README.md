@@ -158,6 +158,8 @@ http://<EC2-PUBLIC-IP>:8080
 ```
 You should now be able to access the application successfully.
 
+<img width="1882" height="963" alt="Screenshot 2026-01-15 at 11 44 31 AM" src="https://github.com/user-attachments/assets/1c9ac7f5-527d-4450-a454-bc7855af7c65" />
+
 ### How Terraform Authenticates with AWS
   - You create AWS access keys (Access Key + Secret Key).
   - You configure these keys using the AWS CLI.
