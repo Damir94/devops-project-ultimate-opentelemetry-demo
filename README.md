@@ -725,3 +725,167 @@ At the bottom of the file, change: type: ClusterIP to type: LoadBalancer
 kubectl get svc
 ```
 Copy the EXTERNAL-IP / FQDN and access it in the browser: 
+
+### Installing AWS ALB Ingress Controller on EKS
+This guide explains how to install the AWS ALB (AWS Load Balancer) Ingress Controller on an EKS cluster, along with the required IAM setup.
+#### Prerequisites
+Before starting, make sure:
+  - You are connected to the correct EC2 instance
+  - eksctl is installed: eksctl version
+  - kubectl is connected to the correct EKS cluster: kubectl config current-context
+  - helm is installed
+You know:
+  - EKS cluster name
+  - AWS region
+  - AWS account ID
+  - VPC ID used by the EKS cluster
+
+1. Setup OIDC Connector
+Without this, the controller cannot create or manage ALBs.
+Set the cluster name:
+```bash
+export cluster_name=demo-cluster
+```
+### Get the OIDC ID for the cluster
+```bash
+oidc_id=$(aws eks describe-cluster --name $cluster_name --query "cluster.identity.oidc.issuer" --output text | cut -d '/' -f 5)
+```
+2. Check if OIDC provider already exists
+```bash
+aws iam list-open-id-connect-providers | grep $oidc_id | cut -d "/" -f4
+```
+If OIDC is NOT configured, run this
+```bash
+eksctl utils associate-iam-oidc-provider --cluster $cluster_name --approve
+```
+3. Download IAM Policy for ALB Controller
+```bash
+curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.11.0/docs/install/iam_policy.json
+```
+4. Create the IAM Policy in AWS
+```bash
+aws iam create-policy \
+    --policy-name AWSLoadBalancerControllerIAMPolicy \
+    --policy-document file://iam_policy.json
+```
+5. Create IAM Role + Kubernetes Service Account
+```bash
+eksctl create iamserviceaccount \
+  --cluster=<your-cluster-name> \
+  --namespace=kube-system \
+  --name=aws-load-balancer-controller \
+  --role-name AmazonEKSLoadBalancerControllerRole \
+  --attach-policy-arn=arn:aws:iam::<your-aws-account-id>:policy/AWSLoadBalancerControllerIAMPolicy \
+  --approve
+```
+6. Deploy the ALB Controller using Helm
+Add the Helm repository
+```bash
+helm repo add eks https://aws.github.io/eks-charts
+```
+Install the ALB Controller
+```bash
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller \            
+  -n kube-system \
+  --set clusterName=<your-cluster-name> \
+  --set serviceAccount.create=false \
+  --set serviceAccount.name=aws-load-balancer-controller \
+  --set region=<region> \
+  --set vpcId=<your-vpc-id>
+```
+7. Verify the Controller is Running
+```bash
+kubectl get deployment -n kube-system aws-load-balancer-controller
+```
+8. Common Issue: No LoadBalancer Address Problem
+```bash
+ kubectl get ingress -n robot-shop
+```
+You might see: No ADDRESS assigned
+### Why this happens
+The IAM policy is missing a required permission: elasticloadbalancing:DescribeListenerAttributes
+Without it, the controller cannot fully read ALB configuration.
+
+9. Check if the Permission Exists
+```bash
+aws iam get-policy-version \
+    --policy-arn arn:aws:iam::<your-aws-account-id>:policy/AWSLoadBalancerControllerIAMPolicy \
+    --version-id $(aws iam get-policy --policy-arn arn:aws:iam::<your-aws-account-id>:policy/AWSLoadBalancerControllerIAMPolicy --query 'Policy.DefaultVersionId' --output text)
+```
+10. Fix Missing Permission (If Needed)
+Download the current policy
+```bash
+aws iam get-policy-version \
+    --policy-arn arn:aws:iam::<your-aws-account-id>:policy/AWSLoadBalancerControllerIAMPolicy \
+    --version-id $(aws iam get-policy --policy-arn arn:aws:iam::<your-aws-account-id>:policy/AWSLoadBalancerControllerIAMPolicy --query 'Policy.DefaultVersionId' --output text) \
+    --query 'PolicyVersion.Document' --output json > policy.json
+```
+Add this permission to policy.json
+```bash
+{
+  "Effect": "Allow",
+  "Action": "elasticloadbalancing:DescribeListenerAttributes",
+  "Resource": "*"
+}
+```
+Create a new policy version
+```bash
+aws iam create-policy-version \
+    --policy-arn arn:aws:iam::<your-aws-account-id>:policy/AWSLoadBalancerControllerIAMPolicy \
+    --policy-document file://policy.json \
+    --set-as-default
+```
+### Access Frontend Application Using Ingress (ALB)
+This guide explains how to expose the frontend proxy of the application to external users using Kubernetes Ingress with the AWS Load Balancer Controller (ALB).
+Prerequisites
+  - AWS Load Balancer Controller installed and running
+  - Frontend proxy Deployment and Service already created
+  - kubectl access to the cluster
+  - Service should NOT be of type LoadBalancer
+
+Step 1: Remove Existing LoadBalancer Service
+Change service type back to NodePort or ClusterIP
+```bash
+kubectl edit svc opentelemetry-demo-frontend-proxy
+```
+type: NodePort (or ClusterIP)
+
+Step 2: Create Ingress Resource
+```bash
+cd ultimate-devops-project-demo/kubernetes/frontend-proxy
+```
+Step 3: Create a new file: ingress.yaml
+Key points:
+  - Use host-based routing
+  - Use a dummy domain (example.com) for testing
+  - Route traffic to the frontend proxy service
+  - Use ALB-specific annotations
+  - Specify IngressClassName as alb
+Sample ingress.yaml
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frontend-proxy
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  ingressClassName: alb
+  rules:
+    - host: example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: opentelemetry-demo-frontend-proxy
+                port:
+                  number: 8080
+```
+Step 4: Apply the Ingress
+```bash
+kubectl apply -f ingress.yaml
+kubectl get ingress
+```
