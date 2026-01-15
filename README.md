@@ -889,3 +889,29 @@ Step 4: Apply the Ingress
 kubectl apply -f ingress.yaml
 kubectl get ingress
 ```
+
+Step 5: Verify ALB Creation
+Go to AWS Console → EC2 → Load Balancers
+Wait until the load balancer status becomes Active
+
+Step 6: Troubleshooting (If ADDRESS Is Missing)
+If you do not see an ADDRESS for the ingress: 
+```bash
+kubectl get pods -n kube-system
+```
+Check logs of the ALB controller pod: 
+```bash
+kubectl logs -n kube-system <alb-controller-pod-name>
+```
+Step 8: Configure Local DNS (For Testing Only)
+Since example.com is not a real domain you own, map it locally.
+On macOS / Linux
+Edit hosts file: 
+```bash
+sudo vi /etc/hosts
+```
+Add: <ALB-IP-ADDRESS> example.com
+Step 9: Access the Application
+```bash
+http://example.com
+```
