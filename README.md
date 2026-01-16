@@ -1040,3 +1040,42 @@ jobs:
             git commit -m "[CI]: Update product catalog image tag"
             git push origin HEAD:main -f
 ```
+### For this setup, Argo CD is installed using plain Kubernetes manifests, as recommended for getting started.
+
+Install Argo CD
+1. Create the Argo CD Namespace
+```bash
+kubectl create namespace argocd
+```
+2. Apply the Argo CD Manifests
+```bash
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+```
+3. Verify Installation
+```bash
+kubectl get pods -n argocd
+```
+4. Check Services:
+```bash
+kubectl get svc -n argocd
+```
+5. Expose Argo CD UI
+```bash
+kubectl edit svc argocd-server -n argocd
+```
+Change: type: ClusterIP to type: LoadBalancer
+6. Then verify: 
+```bash
+kubectl get svc -n argocd
+```
+7. Login to Argo CD
+```bash
+kubectl get secrets -n argocd
+```
+Look for: argocd-initial-admin-secret
+8. Decode the Password
+```bash
+kubectl get secret argocd-initial-admin-secret \
+  -n argocd \
+  -o jsonpath="{.data.password}" | base64 --decode
+```
