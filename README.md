@@ -704,7 +704,7 @@ cd ultimate-devops-project/kubernetes
 All microservices in this project use a custom service account instead of the default one
 Apply Service Account
 ```bash
-kubectl apply -f service-account.yaml
+kubectl apply -f serviceaccount.yaml
 ```
 Verify
 ```bash
