@@ -740,7 +740,7 @@ kubectl get svc
 ### Why the App Is Not Accessible Yet
 If you check the frontend service:
 ```bash
-kubectl get svc | grep frontend
+kubectl get svc | grep opentelemetry-demo-frontendproxy 
 ```
 You will see: Private IPs (e.g., 172.x.x.x)
 These IPs are only accessible inside the VPC
