@@ -711,6 +711,8 @@ Verify
 kubectl get sa
 ```
 You should see: opentelemetry-demo
+<img width="764" height="102" alt="Screenshot 2026-01-17 at 2 24 04 PM" src="https://github.com/user-attachments/assets/0c7e0f5c-1ca0-46db-8dcf-e81cee7368d2" />
+
 ### Step 2: Deploy All Microservices
   -  Option 1: Apply Individual Manifests
      You can apply manifests folder by folder, but this is time-consuming.
@@ -730,6 +732,9 @@ This file:
 kubectl get pods
 kubectl get svc
 ```
+<img width="959" height="413" alt="Screenshot 2026-01-17 at 2 26 06 PM" src="https://github.com/user-attachments/assets/9f087407-18d2-499d-a4b4-c368e903c5d7" />
+
+<img width="1033" height="377" alt="Screenshot 2026-01-17 at 2 26 41 PM" src="https://github.com/user-attachments/assets/bb5dc2dd-609b-4138-84ba-b4ce9d939ea7" />
 
 ## Accessing the Application
 ### Why the App Is Not Accessible Yet
@@ -758,19 +763,22 @@ To access the application from the internet, we must expose the frontend using a
 
 ### Step 1: Identify the Frontend Service. First, find the frontend proxy service:
 ```bash
-kubectl get svc | grep frontend-proxy
+kubectl get svc | grep opentelemetry-demo-frontendproxy 
 ```
 ### Step 2: Edit the Service Type
 ```bash
-kubectl edit svc frontend-proxy
+kubectl edit svc opentelemetry-demo-frontendproxy 
 ```
 At the bottom of the file, change: type: ClusterIP to type: LoadBalancer
+<img width="571" height="143" alt="Screenshot 2026-01-17 at 2 29 56 PM" src="https://github.com/user-attachments/assets/b5cbca31-6ab6-4a74-aa78-9831b7a4c745" />
 
 ### Step 3: Verify the Load Balancer Check the service status: kubectl get svc
 ```bash
 kubectl get svc
 ```
 Copy the EXTERNAL-IP / FQDN and access it in the browser: 
+
+<img width="1354" height="972" alt="Screenshot 2026-01-17 at 2 32 21 PM" src="https://github.com/user-attachments/assets/a675b502-356f-4e8f-9842-f47837068ff7" />
 
 ### Installing AWS ALB Ingress Controller on EKS
 This guide explains how to install the AWS ALB (AWS Load Balancer) Ingress Controller on an EKS cluster, along with the required IAM setup.
@@ -843,6 +851,8 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
 ```bash
 kubectl get deployment -n kube-system aws-load-balancer-controller
 ```
+<img width="1256" height="83" alt="Screenshot 2026-01-17 at 2 45 44 PM" src="https://github.com/user-attachments/assets/58018bb6-ef1d-4e50-9c22-b47bf79399fa" />
+
 8. Common Issue: No LoadBalancer Address Problem
 ```bash
  kubectl get ingress -n robot-shop
