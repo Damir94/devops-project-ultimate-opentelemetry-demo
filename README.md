@@ -181,6 +181,41 @@ You will be prompted to enter:
   - Default region (e.g., us-east-1)
   - Default output format (press Enter to keep default)
 
+### Terraform Backend Setup (S3 + DynamoDB)
+This guide explains how to create a Terraform backend using AWS S3 for state storage and DynamoDB for state locking.
+Sample Terraform Code (main.tf)
+```hcl
+provider "aws" {
+  region = "us-east-1"
+}
+resource "aws_s3_bucket" "terraform_state_bucket" {
+  bucket = "terraform-demo-x-state-s3-bucket-damir"
+
+  lifecycle {
+    prevent_destroy = false
+  }
+}
+resource "aws_dynamodb_table" "terraform_state_lock" {
+  name         = "terraform-eks-state-locks"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LockID"
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+}
+```
+### Terraform Commands to Run
+From inside the backend folder:
+```bash
+terraform init
+terraform plan
+terraform apply
+```
+<img width="1010" height="303" alt="Screenshot 2026-01-17 at 1 58 50 PM" src="https://github.com/user-attachments/assets/0eb2e015-bee5-4649-8585-453e4e9de19a" />
+
+<img width="1523" height="242" alt="Screenshot 2026-01-17 at 1 59 07 PM" src="https://github.com/user-attachments/assets/0018a958-cb06-4c4f-a4c2-9636d325f435" />
+
 ### VPC Module for EKS Cluster (Terraform)
 In this project, we create a reusable Terraform VPC module and use it to deploy an EKS cluster in AWS.
 
