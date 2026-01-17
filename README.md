@@ -513,6 +513,7 @@ output "cluster_name" {
   value       = aws_eks_cluster.main.name
 }
 ```
+<img width="1568" height="650" alt="Screenshot 2026-01-17 at 2 10 48 PM" src="https://github.com/user-attachments/assets/69824ec3-7a56-4c59-b3db-4ab32663e000" />
 
 ### Final Flow (Very Important)
   - Create cluster IAM role
@@ -662,6 +663,8 @@ terraform init
 terraform plan
 terraform apply
 ```
+<img width="1237" height="274" alt="Screenshot 2026-01-17 at 2 11 19 PM" src="https://github.com/user-attachments/assets/752dea95-4a24-4a29-8fcc-37ad94084d6b" />
+
 ### Connecting kubectl to an Amazon EKS Cluster
 By default, kubectl does not know which Kubernetes cluster to connect to.
 To communicate with a cluster (like EKS), kubectl relies on a configuration file called kubeconfig.
