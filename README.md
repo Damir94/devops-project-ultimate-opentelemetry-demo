@@ -683,6 +683,8 @@ kubectl get nodes
 ```
 If nodes are listed, kubectl is successfully connected to your EKS cluster.
 
+<img width="770" height="108" alt="Screenshot 2026-01-17 at 2 19 34 PM" src="https://github.com/user-attachments/assets/57254485-68a9-4781-9cdf-2eff9773ee38" />
+
 ### Deploying the Project to an EKS Cluster
 This guide explains how to deploy the project’s microservices to an EKS (Kubernetes) cluster, verify the deployment, and understand how services communicate with each other.
 1. Verify Cluster Context
