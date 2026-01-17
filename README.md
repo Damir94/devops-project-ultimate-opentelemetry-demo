@@ -912,8 +912,52 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
 ```
 8. Verify the Controller is Running
 ```bash
-kubectl get deployment -n kube-system aws-load-balancer-controller
+kubectl get pods -n kube-system
 ```
+9. Check logs of the controller
+```bash
+kubectl logs pod-name -n kube-system
+```
+10. Remove Existing LoadBalancer Service
+Change service type back to NodePort or ClusterIP
+```bash
+kubectl edit svc opentelemetry-demo-frontendproxy
+```
+type: NodePort (or ClusterIP)
+This automatically deletes the AWS Load Balancer created earlier.
+11. Create Ingress Resource
+```bash
+cd ultimate-devops-project-demo/kubernetes/frontend-proxy
+```
+12. Create a new file: ingress.yaml
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frontend-proxy
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  ingressClassName: alb
+  rules:
+    - host: example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: opentelemetry-demo-frontend-proxy
+                port:
+                  number: 8080
+```
+13. Step 4: Apply the Ingress
+```bash
+kubectl apply -f ingress.yaml
+kubectl get ingress
+```
+
 
 ### Product Catalog Service – CI Pipeline
 This repository uses GitHub Actions to run a Continuous Integration (CI) pipeline for the Product Catalog Service (a Go application).
