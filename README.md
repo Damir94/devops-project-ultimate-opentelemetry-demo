@@ -740,7 +740,7 @@ kubectl get svc
 ### Why the App Is Not Accessible Yet
 If you check the frontend service:
 ```bash
-kubectl get svc | grep opentelemetry-demo-frontendproxy 
+kubectl get svc | grep opentelemetry-demo-frontend
 ```
 You will see: Private IPs (e.g., 172.x.x.x)
 These IPs are only accessible inside the VPC
@@ -780,6 +780,140 @@ Copy the EXTERNAL-IP / FQDN and access it in the browser:
 
 <img width="1354" height="972" alt="Screenshot 2026-01-17 at 2 32 21 PM" src="https://github.com/user-attachments/assets/a675b502-356f-4e8f-9842-f47837068ff7" />
 
+### Installing AWS ALB Ingress Controller on EKS
+This guide explains how to install the AWS ALB (AWS Load Balancer) Ingress Controller on an EKS cluster, along with the required IAM setup.
+#### Prerequisites
+Before starting, make sure:
+
+### eksctl is installed: eksctl version
+Install
+```bash
+sudo apt update && sudo apt install -y curl
+```
+Download the latest eksctl binary
+```bash
+curl -sLO https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz
+```
+Extract the binary
+```bash
+tar -xzf eksctl_Linux_amd64.tar.gz
+```
+Move it to a system path
+```bash
+sudo mv eksctl /usr/local/bin
+```
+Verify installation
+```bash
+eksctl version
+```
+
+### aws cli is installed
+Update your system
+```bash
+sudo apt update
+```
+Download AWS CLI
+```bash
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+```
+Unzip the installer
+```bash
+unzip awscliv2.zip
+```
+Install AWS CLI
+```bash
+sudo ./aws/install
+```
+Verify Installation
+```bash
+aws --version
+```
+### helm is installed
+```bash
+sudo apt update
+```
+Download and install Helm
+```bash
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+```
+Verify installation
+```bash
+helm version
+```
+Set the cluster name:
+```bash
+export cluster_name=demo-cluster
+```
+1. Setup OIDC Connector
+```bash
+oidc_id=$(aws eks describe-cluster --name $cluster_name --query "cluster.identity.oidc.issuer" --output text | cut -d '/' -f 5)
+```
+2. Check if OIDC provider already exists
+```bash
+aws iam list-open-id-connect-providers | grep $oidc_id | cut -d "/" -f4
+```
+If OIDC is NOT configured, run this
+```bash
+eksctl utils associate-iam-oidc-provider --cluster $cluster_name --approve
+```
+3. Download IAM Policy for ALB Controller
+```bash
+curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.11.0/docs/install/iam_policy.json
+```
+4. Create the IAM Policy in AWS
+```bash
+aws iam create-policy \
+    --policy-name AWSLoadBalancerControllerIAMPolicy \
+    --policy-document file://iam_policy.json
+```
+### If you get this error: An error occurred (EntityAlreadyExists) when calling the CreatePolicy operation: A policy called AWSLoadBalancerControllerIAMPolicy already exists. Duplicate names are not allowed.
+### What you should do instead
+#### Get the policy ARN
+You need the ARN, not to recreate the policy.
+```bash
+aws iam list-policies \
+  --query "Policies[?PolicyName=='AWSLoadBalancerControllerIAMPolicy'].Arn" \
+  --output text
+```
+#### Attach the policy to your IAM role
+(Usually the role used by the AWS Load Balancer Controller)
+```bash
+aws iam attach-role-policy \
+  --role-name AmazonEKSLoadBalancerControllerRole \
+  --policy-arn arn:aws:iam::123456789012:policy/AWSLoadBalancerControllerIAMPolicy
+```
+Replace:  
+  - AmazonEKSLoadBalancerControllerRole with your actual role name
+  - Account ID if different
+5. Create IAM Role + Kubernetes Service Account
+```bash
+eksctl create iamserviceaccount \
+  --cluster=<your-cluster-name> \
+  --namespace=kube-system \
+  --name=aws-load-balancer-controller \
+  --role-name AmazonEKSLoadBalancerControllerRole \
+--attach-policy-arn=arn:aws:iam::<your-aws-account-id>:policy/AWSLoadBalancerControllerIAMPolicy \
+  --approve
+```
+6. Deploy the ALB Controller using Helm
+```bash
+helm repo add eks https://aws.github.io/eks-charts
+helm repo update eks
+```
+7. Install the ALB Controller
+```bash
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller \            
+  -n kube-system \
+  --set clusterName=<your-cluster-name> \
+  --set serviceAccount.create=false \
+  --set serviceAccount.name=aws-load-balancer-controller \
+  --set region=<region> \
+  --set vpcId=<your-vpc-id>
+```
+8. Verify the Controller is Running
+```bash
+kubectl get deployment -n kube-system aws-load-balancer-controller
+```
 
 ### Product Catalog Service – CI Pipeline
 This repository uses GitHub Actions to run a Continuous Integration (CI) pipeline for the Product Catalog Service (a Go application).
