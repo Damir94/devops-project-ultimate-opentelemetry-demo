@@ -647,6 +647,27 @@ terraform apply
 By default, kubectl does not know which Kubernetes cluster to connect to.
 To communicate with a cluster (like EKS), kubectl relies on a configuration file called kubeconfig.
 
+### aws cli is installed
+Update your system
+```bash
+sudo apt update
+```
+Download AWS CLI
+```bash
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+```
+Unzip the installer
+```bash
+unzip awscliv2.zip
+```
+Install AWS CLI
+```bash
+sudo ./aws/install
+```
+Verify Installation
+```bash
+aws --version
+```
 ### Update kubeconfig with EKS Cluster Info
 Run the following command:
 ```bash
@@ -775,27 +796,6 @@ sudo mv eksctl /usr/local/bin
 Verify installation
 ```bash
 eksctl version
-```
-### aws cli is installed
-Update your system
-```bash
-sudo apt update
-```
-Download AWS CLI
-```bash
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-```
-Unzip the installer
-```bash
-unzip awscliv2.zip
-```
-Install AWS CLI
-```bash
-sudo ./aws/install
-```
-Verify Installation
-```bash
-aws --version
 ```
 ### helm is installed
 ```bash
