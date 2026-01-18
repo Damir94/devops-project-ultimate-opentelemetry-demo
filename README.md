@@ -948,8 +948,9 @@ nslookup ALB-DNS-name
 ```bash
 sudo vi /etc/hosts
 ```
-Add: <ALB-IP-ADDRESS> example.com
-
+```bash
+<ALB-IP-ADDRESS>   example.com
+```
     
 ### Product Catalog Service – CI Pipeline
 This repository uses GitHub Actions to run a Continuous Integration (CI) pipeline for the Product Catalog Service (a Go application).
