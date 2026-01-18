@@ -1154,6 +1154,8 @@ kubectl get secret argocd-initial-admin-secret \
 ### Configuring Argo CD Application (GitOps Deployment)
 This section explains how to connect Argo CD to a Git repository so that it can automatically deploy updated Kubernetes manifests to the cluster.
 
+<img width="1398" height="748" alt="Screenshot 2026-01-18 at 3 39 21 PM" src="https://github.com/user-attachments/assets/7cd32dce-ab33-4a58-98b8-f9755afe6af9" />
+
 ### Create an Argo CD Application
 1. Open the Argo CD UI
 2. Click Create Application
@@ -1185,8 +1187,6 @@ This section explains how to connect Argo CD to a Git repository so that it can 
     - Use: default
 - Deploy the Application
     - Click Create
-  
-<img width="1398" height="748" alt="Screenshot 2026-01-18 at 3 39 21 PM" src="https://github.com/user-attachments/assets/7cd32dce-ab33-4a58-98b8-f9755afe6af9" />
 
 <img width="1277" height="605" alt="Screenshot 2026-01-18 at 3 52 51 PM" src="https://github.com/user-attachments/assets/a3866bbd-83dc-4c52-a9df-b50209b023ab" />
 
