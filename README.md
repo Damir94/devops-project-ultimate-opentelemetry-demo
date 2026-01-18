@@ -1080,6 +1080,19 @@ jobs:
             git commit -m "[CI]: Update product catalog image tag"
             git push origin HEAD:main -f
 ```
+### Triggering the CI Pipeline
+To verify the CI workflow:
+  - Create a new feature branch (for example: github-ci-check)
+  - Make a small dummy change to the application code
+  - Commit and push the changes
+  - Open a Pull Request (PR) to the main branch
+Creating the PR automatically triggers the CI pipeline.
+<img width="1623" height="321" alt="Screenshot 2026-01-18 at 3 12 56 PM" src="https://github.com/user-attachments/assets/587bdf1f-2199-4ff3-8104-d5de045dfa33" />
+
+<img width="1614" height="886" alt="Screenshot 2026-01-18 at 3 13 15 PM" src="https://github.com/user-attachments/assets/a1954736-2dd0-4860-87a7-1b7a0f90706f" />
+
+<img width="1888" height="735" alt="Screenshot 2026-01-18 at 3 28 18 PM" src="https://github.com/user-attachments/assets/98f000f8-7d6a-4948-9e4e-0a282b80ea2a" />
+
 ### For this setup, Argo CD is installed using plain Kubernetes manifests, as recommended for getting started.
 
 Install Argo CD
