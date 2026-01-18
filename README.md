@@ -1093,6 +1093,13 @@ Creating the PR automatically triggers the CI pipeline.
 
 <img width="1888" height="735" alt="Screenshot 2026-01-18 at 3 28 18 PM" src="https://github.com/user-attachments/assets/98f000f8-7d6a-4948-9e4e-0a282b80ea2a" />
 
+### Static Code Analysis Results
+  - The Code Quality stage failed, which is expected and useful:
+  - Detected usage of deprecated Go functions
+  - Found unused functions in the code
+  - This shows that static analysis is working correctly and catching real issues before deployment.
+
+
 ### For this setup, Argo CD is installed using plain Kubernetes manifests, as recommended for getting started.
 
 Install Argo CD
@@ -1108,27 +1115,76 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/st
 ```bash
 kubectl get pods -n argocd
 ```
+<img width="906" height="207" alt="Screenshot 2026-01-18 at 3 33 20 PM" src="https://github.com/user-attachments/assets/bf1a3ca1-caf6-4efd-8294-1da05abdbac1" />
+
 4. Check Services:
 ```bash
 kubectl get svc -n argocd
 ```
+<img width="1065" height="208" alt="Screenshot 2026-01-18 at 3 33 38 PM" src="https://github.com/user-attachments/assets/21d23a9f-897b-40b3-b50a-f7d3b0aa1818" />
+
 5. Expose Argo CD UI
 ```bash
 kubectl edit svc argocd-server -n argocd
 ```
 Change: type: ClusterIP to type: LoadBalancer
-6. Then verify: 
+
+<img width="420" height="146" alt="Screenshot 2026-01-18 at 3 34 35 PM" src="https://github.com/user-attachments/assets/37105a2f-b248-4cc8-a73e-6e8753e032ea" />
+
+6. Then verify and loadbalancer dns name: 
 ```bash
 kubectl get svc -n argocd
 ```
+<img width="1370" height="954" alt="Screenshot 2026-01-18 at 3 37 37 PM" src="https://github.com/user-attachments/assets/a2705dae-ff0f-447b-a286-23a6d7084b51" />
+
 7. Login to Argo CD
 ```bash
 kubectl get secrets -n argocd
 ```
+<img width="942" height="167" alt="Screenshot 2026-01-18 at 3 38 13 PM" src="https://github.com/user-attachments/assets/54105a99-b178-42f6-92d8-4ba8ed94a150" />
 Look for: argocd-initial-admin-secret
+
 8. Decode the Password
 ```bash
 kubectl get secret argocd-initial-admin-secret \
   -n argocd \
   -o jsonpath="{.data.password}" | base64 --decode
 ```
+### Configuring Argo CD Application (GitOps Deployment)
+This section explains how to connect Argo CD to a Git repository so that it can automatically deploy updated Kubernetes manifests to the cluster.
+
+### Create an Argo CD Application
+1. Open the Argo CD UI
+2. Click Create Application
+
+### Application Settings
+- Application Name
+   - Use a meaningful name such as:
+      - product-catalog
+      - product-catalog-service
+- Project
+    - Keep it as default
+- Sync Policy
+    - Argo CD supports two sync modes:
+- Manual
+    - Deployment happens only when triggered manually
+- Automatic (Recommended)
+    - Argo CD automatically detects changes in Git
+    - Deploys updates to the cluster without manual action
+- For this setup, Automatic sync is enabled.
+- Repository Configuration
+    - Provide the Git repository URL that contains Kubernetes manifests
+- Revision
+    - Use HEAD to always track the latest commit
+- Path
+  - Provide the path where Kubernetes manifests are stored: kubernetes/productcatalog
+- Destination Configuration
+    - Cluster: https://kubernetes.default.svc
+- Namespace
+    - Use: default
+- Deploy the Application
+    - Click Create
+  
+<img width="1398" height="748" alt="Screenshot 2026-01-18 at 3 39 21 PM" src="https://github.com/user-attachments/assets/7cd32dce-ab33-4a58-98b8-f9755afe6af9" />
+
+
