@@ -10,6 +10,49 @@ Requests flow through a front-end reverse proxy, which handles routing, validati
 
 All services integrate with FlagD for feature flagging, enabling dynamic feature control without redeployments. This project provides a realistic, end-to-end example of how modern e-commerce platforms are built and operated.
 
+### This project was designed to closely match day-to-day responsibilities of a DevOps / Cloud Engineer, not just tool usage.
+
+What this project covered (end to end):
+  - AWS foundation & security
+  - AWS account setup, IAM users & roles
+  - EC2 provisioning, security groups, inbound rules
+  - Custom VPC design and networking
+  - Containerization & local development
+  - Docker installation & configuration
+  - Dockerfiles, image builds, containers
+  - Docker Compose for local testing
+  - Infrastructure as Code with Terraform
+  - Terraform setup, lifecycle, and best practices
+  - Remote backend, statefile management & state locking
+  - Terraform implementation for VPC and EKS
+  - Kubernetes implementation
+  - Kubernetes manifests (Deployments, Services, Ingress)
+  - Ingress Controller setup
+  - Storage Classes, PV & PVC
+  - Running and validating workloads on EKS
+  - Domain & networking
+  - Custom domain setup
+  - Route 53 configuration for EKS
+  - Ingress integration with custom domain
+  - GitOps & CI/CD
+  - GitOpsification of the project
+  - Argo CD installation, configuration, and deployments
+  - CI pipelines using GitHub Actions
+  - End-to-end CI/CD with GitHub Actions + Argo CD
+
+### Key architectural and operational takeaways
+
+🛠 Tools & Technologies Used:
+  -  AWS (VPC, EC2, IAM, EKS, Route 53)
+  -  Docker & Docker Compose
+  -  Terraform (IaC, backend, state locking)
+  -  Kubernetes
+  -  GitHub Actions
+  -  Argo CD (GitOps)
+
+### Why this matters:
+This project reinforced how DevOps engineers operate in real environments—owning infrastructure, deployments, automation, security, and reliability end to end, not just writing YAML or pipelines.
+
 ### Docker Installation Guide (Ubuntu)
 This README provides a clear, step-by-step guide to installing Docker Engine and related components on an Ubuntu system using the official Docker repository.
 
