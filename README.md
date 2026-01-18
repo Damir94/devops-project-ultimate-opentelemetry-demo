@@ -883,6 +883,8 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
 ```bash
 kubectl get pods -n kube-system
 ```
+<img width="774" height="212" alt="Screenshot 2026-01-18 at 2 54 37 PM" src="https://github.com/user-attachments/assets/8297076a-7042-4ea7-a3d8-3790ba15aa7a" />
+
 9. Check logs of the controller
 ```bash
 kubectl logs pod-name -n kube-system
@@ -926,6 +928,8 @@ spec:
 kubectl apply -f ingress.yaml
 kubectl get ingress
 ```
+<img width="1076" height="295" alt="Screenshot 2026-01-18 at 2 56 40 PM" src="https://github.com/user-attachments/assets/804849a5-3624-4228-84e8-b5ad3da57654" />
+
 14. Verify ALB Creation
   - Go to AWS Console → EC2 → Load Balancers
   - Wait until the load balancer status becomes Active
