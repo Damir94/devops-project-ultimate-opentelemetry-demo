@@ -951,6 +951,7 @@ sudo vi /etc/hosts
 ```bash
 <ALB-IP-ADDRESS>   example.com
 ```
+<img width="1817" height="893" alt="Screenshot 2026-01-18 at 10 51 36 AM" src="https://github.com/user-attachments/assets/0a4927e2-5c18-496b-b8e5-c7b1813dbeea" />
     
 ### Product Catalog Service – CI Pipeline
 This repository uses GitHub Actions to run a Continuous Integration (CI) pipeline for the Product Catalog Service (a Go application).
