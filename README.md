@@ -175,12 +175,6 @@ You should now be able to access the application successfully.
 ```bash
 aws configure
 ```
-You will be prompted to enter:
-  - AWS Access Key ID
-  - AWS Secret Access Key
-  - Default region (e.g., us-east-1)
-  - Default output format (press Enter to keep default)
-
 ### Terraform Backend Setup (S3 + DynamoDB)
 This guide explains how to create a Terraform backend using AWS S3 for state storage and DynamoDB for state locking.
 Sample Terraform Code (main.tf)
@@ -326,14 +320,6 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 ```
-### Big Picture (One-Line Summary)
-  - VPC → Network
-  - Public Subnets → Internet-facing resource
-  - Private Subnets → EKS tasks / backend
-  - Internet Gateway → Incoming/outgoing internet
-  - NAT Gateway → Secure outbound internet
-  - Route Tables → Control traffic flow
-
 ### variables.tf
 ```hcl
 variable "vpc_cidr" {
@@ -515,18 +501,10 @@ output "cluster_name" {
 ```
 <img width="1568" height="650" alt="Screenshot 2026-01-17 at 2 10 48 PM" src="https://github.com/user-attachments/assets/69824ec3-7a56-4c59-b3db-4ab32663e000" />
 
-### Final Flow (Very Important)
-  - Create cluster IAM role
-  - Attach cluster policy
-  - Create EKS cluster (control plane)
-  - Create node IAM role
-  - Attach node policies
-  - Create node groups (worker nodes)
-
 ### One-Line Summary
 This Terraform code creates a complete EKS cluster by setting up IAM roles, attaching required policies, creating the control plane, and launching worker nodes with proper networking and permissions.
 
-In this lecture we will learn how to create VPC and EKS using the modules that we wrote in the previous lecture. Because we already wrote the modules.
+### In this lecture we will learn how to create VPC and EKS using the modules that we wrote in the previous lecture. Because we already wrote the modules.
 
 ### main.tf
 ```hcl
@@ -748,14 +726,6 @@ These IPs are only accessible inside the VPC
 That means:
   - You cannot access the application from your browser yet
   - The EKS cluster runs inside a private VPC network
-### Summary
-  - Always verify cluster context before deployment
-  - Ensure namespace is clean
-  - Create the service account first
-  - Deploy all services and deployments
-  - Wait for all pods to be running
-  - Microservices communicate via service names
-  - Application is not publicly accessible yet (by design)
 
 ### Exposing the Application Using LoadBalancer Service
 By default, Kubernetes services are created as ClusterIP, which means they are accessible only inside the cluster.
@@ -806,7 +776,6 @@ Verify installation
 ```bash
 eksctl version
 ```
-
 ### aws cli is installed
 Update your system
 ```bash
