@@ -896,7 +896,7 @@ type: NodePort (or ClusterIP)
 This automatically deletes the AWS Load Balancer created earlier.
 11. Create Ingress Resource
 ```bash
-cd ultimate-devops-project-demo/kubernetes/frontend-proxy
+cd ultimate-devops-project-demo/kubernetes/frontendproxy
 ```
 12. Create a new file: ingress.yaml
 ```yaml
