@@ -1142,6 +1142,7 @@ kubectl get svc -n argocd
 kubectl get secrets -n argocd
 ```
 <img width="942" height="167" alt="Screenshot 2026-01-18 at 3 38 13 PM" src="https://github.com/user-attachments/assets/54105a99-b178-42f6-92d8-4ba8ed94a150" />
+
 Look for: argocd-initial-admin-secret
 
 8. Decode the Password
@@ -1187,4 +1188,5 @@ This section explains how to connect Argo CD to a Git repository so that it can 
   
 <img width="1398" height="748" alt="Screenshot 2026-01-18 at 3 39 21 PM" src="https://github.com/user-attachments/assets/7cd32dce-ab33-4a58-98b8-f9755afe6af9" />
 
+<img width="1277" height="605" alt="Screenshot 2026-01-18 at 3 52 51 PM" src="https://github.com/user-attachments/assets/a3866bbd-83dc-4c52-a9df-b50209b023ab" />
 
