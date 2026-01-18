@@ -1,3 +1,5 @@
+![opente](https://github.com/user-attachments/assets/a73a915b-210e-4f15-8c26-1752387f67ed)
+
 # Project Overview
 
 This project is a real-world e-commerce demo application designed to showcase modern microservices architecture. Although the application appears simple on the surface, it is powered by many interconnected components working together, making it an excellent learning resource for understanding production-grade systems.
@@ -7,9 +9,6 @@ The application is publicly accessible via the web and includes a load generator
 Requests flow through a front-end reverse proxy, which handles routing, validation, and traffic control before reaching the front-end UI. From there, requests are served by multiple backend services, including product catalog, cart, checkout, payment, shipping, email notifications, currency conversion, recommendations, fraud detection, and accounting services.
 
 All services integrate with FlagD for feature flagging, enabling dynamic feature control without redeployments. This project provides a realistic, end-to-end example of how modern e-commerce platforms are built and operated.
-
-![opente](https://github.com/user-attachments/assets/a73a915b-210e-4f15-8c26-1752387f67ed)
-
 
 ### Docker Installation Guide (Ubuntu)
 This README provides a clear, step-by-step guide to installing Docker Engine and related components on an Ubuntu system using the official Docker repository.
