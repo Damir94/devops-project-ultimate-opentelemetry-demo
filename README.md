@@ -944,21 +944,44 @@ spec:
     - host: example.com
       http:
         paths:
-          - path: /
+          - path: "/"
             pathType: Prefix
             backend:
               service:
-                name: opentelemetry-demo-frontend-proxy
+                name: opentelemetry-demo-frontendproxy
                 port:
                   number: 8080
 ```
-13. Step 4: Apply the Ingress
+13. Apply the Ingress
 ```bash
 kubectl apply -f ingress.yaml
 kubectl get ingress
 ```
+14. Verify ALB Creation
+  - Go to AWS Console → EC2 → Load Balancers
+  - Wait until the load balancer status becomes Active
+15. Troubleshooting (If ADDRESS Is Missing)
+```bash
+kubectl get pods -n kube-system
+kubectl logs -n kube-system <alb-controller-pod-name>
+```
+### Access Behavior (Important Concept)
+  - Because this ingress uses host-based routing:
+  - Accessing the ALB IP address will NOT work
+  - Accessing the ALB DNS name directly will NOT work
+  - Accessing via the configured host (example.com) WILL work
 
+16. First run nslookup to identify loadbalancer IP address
+```bash
+nslookup ALB-DNS-name
+``` 
+18. Configure Local DNS (For Testing Only) on local computer.
+```bash
+sudo vi /etc/hosts
+```
+Add: <ALB-IP-ADDRESS> example.com
 
+    
 ### Product Catalog Service – CI Pipeline
 This repository uses GitHub Actions to run a Continuous Integration (CI) pipeline for the Product Catalog Service (a Go application).
 The pipeline automatically:
