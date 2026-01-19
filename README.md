@@ -1,6 +1,5 @@
 ![opente](https://github.com/user-attachments/assets/a73a915b-210e-4f15-8c26-1752387f67ed)
 
-
 # Project Overview
 
 This project is a real-world e-commerce demo application designed to showcase modern microservices architecture. Although the application appears simple on the surface, it is powered by many interconnected components working together, making it an excellent learning resource for understanding production-grade systems.
